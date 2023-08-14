@@ -16,7 +16,6 @@ def index(request) -> HttpResponse:
         if form.is_valid():
             files.save_file(request.FILES.get('file'),
                             settings.MEDIA_ROOT / 'pdfs/')
-            print('DONER')
             # pdf.compress_pdf('some_filename')
     else:
         form = UploadFileForm()
