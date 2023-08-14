@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.conf import settings
 from .forms import UploadFileForm
 from .services import pdf_modify as pdf
+from .services import files
 
 # Figure out how to embed servises here
 
@@ -13,9 +14,10 @@ def index(request) -> HttpResponse:
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            pdf.save_file(request.FILES.get('file'),
-                          settings.MEDIA_ROOT / 'pdfs/')
-            pdf.compress_pdf('some_filename')
+            files.save_file(request.FILES.get('file'),
+                            settings.MEDIA_ROOT / 'pdfs/')
+            print('DONER')
+            # pdf.compress_pdf('some_filename')
     else:
         form = UploadFileForm()
     context = {'form': form,

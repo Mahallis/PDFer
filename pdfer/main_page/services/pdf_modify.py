@@ -8,12 +8,6 @@ from PyPDF2 import PdfReader, PdfWriter
 from pdf2image.pdf2image import convert_from_path
 
 
-def save_file(file, path):
-    with open(path / file.name, 'wb+') as f:
-        for chunk in file.chunks():
-            f.write(chunk)
-
-
 def show_pages(filename: str) -> None:
     '''Scaling pages to place them on a web page to proceed modification'''
     'TODO: get files one by one'
