@@ -1,5 +1,6 @@
 import os
 from shutil import rmtree
+from pathlib import PosixPath
 import tempfile
 from PIL import Image
 from datetime import datetime
@@ -49,46 +50,45 @@ def merge_pdf(filenames: list) -> None:
         writer.write(fout)
 
 
-def compress_pdf(filename: str) -> None:
+def compress_pdf(filename: str, path: PosixPath) -> None:
     '''Reduces file size converting a pdf pages to 
     jpg images, reducing their quality and then merging into one pdf file'''
     '''TODO: make it work with django. Start from changing rules to work with files instead of filenames'''
 
-    tmp_dir = os.getcwd() + \
-        f'/pages_{datetime.now().time().isoformat("seconds")}'
+    tmp_dir = path / f'pages_{datetime.now().time().isoformat("seconds")}'
     os.mkdir(tmp_dir)
-    os.mkdir(tmp_dir + '/pdf')
-    os.mkdir(tmp_dir + '/jpg')
+    os.mkdir(tmp_dir / 'pdf')
+    os.mkdir(tmp_dir / 'jpg')
 
-    pdf_to_img_compress(tmp_dir, filename)
-    jpg_to_pdf(tmp_dir, filename)
+    pdf_to_img_compress(filename, path, tmp_dir)
+    jpg_to_pdf(filename, path, tmp_dir)
 
     rmtree(tmp_dir)
 
 
-def pdf_to_img_compress(tmp_dir: str, filename: str) -> None:
+def pdf_to_img_compress(filename: str, path: PosixPath, tmp_dir: PosixPath) -> None:
     '''TODO: use split_pdf function to split files'''
 
-    pdf_file = PdfReader(filename)
+    pdf_file = PdfReader(path / filename)
     for num, page in enumerate(pdf_file.pages):
-        temp_file = tmp_dir + f'/pdf/{num}.pdf'
+        temp_file = tmp_dir / f'pdf/{num}.pdf'
         with open(temp_file, 'wb') as fout:
             writer = PdfWriter()
             writer.add_page(page)
             writer.write(fout)
 
-        with open(tmp_dir + f'/jpg/{num}.jpg', 'wb') as jpg_fout:
-            with tempfile.TemporaryDirectory() as path:
+        with open(tmp_dir / f'jpg/{num}.jpg', 'wb') as jpg_fout:
+            with tempfile.TemporaryDirectory() as tmp_path:
                 page_image = convert_from_path(
-                    temp_file, output_file=path, dpi=150, grayscale=True, paths_only=True)
+                    temp_file, output_file=tmp_path, dpi=150, grayscale=True, paths_only=True)
                 for image in page_image:
                     image.save(jpg_fout, optimize=True, quality=60)
 
 
-def jpg_to_pdf(tmp_dir: str, filename: str) -> None:
-    pdf_path = f'{filename}_compressed.pdf'
-    jpg_paths = [tmp_dir + '/jpg/' +
-                 file for file in sorted(os.listdir(tmp_dir + '/jpg'))]
+def jpg_to_pdf(filename: str, path: PosixPath, tmp_dir: PosixPath) -> None:
+    pdf_path = path / f'{filename}_compressed.pdf'
+    jpg_paths = [tmp_dir / 'jpg/' /
+                 file for file in sorted(os.listdir(tmp_dir / 'jpg'))]
     Image.open(jpg_paths[0]).save(pdf_path, 'PDF', resolution=50.0,
                                   save_all=True, append_images=(Image.open(file)
                                                                 for file in jpg_paths[1:]))

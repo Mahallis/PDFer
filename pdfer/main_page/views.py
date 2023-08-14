@@ -5,10 +5,6 @@ from .forms import UploadFileForm
 from .services import pdf_modify as pdf
 from .services import files
 
-# Figure out how to embed servises here
-
-# Create your views here.
-
 
 def index(request) -> HttpResponse:
     if request.method == 'POST':
@@ -16,7 +12,8 @@ def index(request) -> HttpResponse:
         if form.is_valid():
             files.save_file(request.FILES.get('file'),
                             settings.MEDIA_ROOT / 'pdfs/')
-            # pdf.compress_pdf('some_filename')
+            pdf.compress_pdf(request.FILES.get('file').name,
+                             settings.MEDIA_ROOT / 'pdfs/')
     else:
         form = UploadFileForm()
     context = {'form': form,
