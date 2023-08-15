@@ -15,7 +15,7 @@ def index(request) -> HttpResponse:
             compressed_path = pdf.compress_pdf(request.FILES.get('file').name,
                                                settings.MEDIA_ROOT / 'pdfs/')
             with open(compressed_path, 'rb') as file:
-                return HttpResponse(file, headers={
+                return HttpResponse(file.read(), headers={
                     'Content-Type': 'application:pdf',
                     'Content-Disposition': f'attachment; filename="{request.FILES.get("file").name}"'
                 })

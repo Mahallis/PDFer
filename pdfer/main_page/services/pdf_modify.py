@@ -42,6 +42,7 @@ def split_pdf(filename: str, ranges: list) -> None:
 def merge_pdf(filenames: list) -> None:
     '''Merges given files'''
     '''TODO: figure out how to merge several files. Maybe it is possible by handling files as list of pages'''
+
     with open('Merged_files.pdf', 'wb') as fout:
         writer = PdfWriter()
         for filename in filenames:
@@ -50,27 +51,28 @@ def merge_pdf(filenames: list) -> None:
         writer.write(fout)
 
 
-def compress_pdf(filename: str, path: PosixPath) -> PosixPath:
+def compress_pdf(filename: str, path: PosixPath) -> str:
     '''Reduces file size converting a pdf pages to 
     jpg images, reducing their quality and then merging into one pdf file'''
-    '''TODO: make it work with django. Start from changing rules to work with files instead of filenames'''
 
     tmp_dir = path / f'pages_{datetime.now().time().isoformat("seconds")}'
+    file_path = path / filename
+
     os.mkdir(tmp_dir)
     os.mkdir(tmp_dir / 'pdf')
     os.mkdir(tmp_dir / 'jpg')
 
-    pdf_to_img_compress(filename, path, tmp_dir)
-    comressed_path = jpg_to_pdf(filename, path, tmp_dir)
+    pdf_to_img_compress(file_path, tmp_dir)
+    comressed_name = jpg_to_pdf(file_path, tmp_dir)
 
     rmtree(tmp_dir)
-    return comressed_path
+    return comressed_name
 
 
-def pdf_to_img_compress(filename: str, path: PosixPath, tmp_dir: PosixPath) -> None:
+def pdf_to_img_compress(file_path: PosixPath, tmp_dir: PosixPath) -> None:
     '''TODO: use split_pdf function to split files'''
 
-    pdf_file = PdfReader(path / filename)
+    pdf_file = PdfReader(file_path)
     for num, page in enumerate(pdf_file.pages):
         temp_file = tmp_dir / f'pdf/{num}.pdf'
         with open(temp_file, 'wb') as fout:
@@ -86,14 +88,15 @@ def pdf_to_img_compress(filename: str, path: PosixPath, tmp_dir: PosixPath) -> N
                     image.save(jpg_fout, optimize=True, quality=60)
 
 
-def jpg_to_pdf(filename: str, path: PosixPath, tmp_dir: PosixPath) -> PosixPath:
-    pdf_path = path / f'{filename}_compressed.pdf'
-    jpg_paths = [tmp_dir / 'jpg/' /
-                 file for file in sorted(os.listdir(tmp_dir / 'jpg'))]
-    Image.open(jpg_paths[0]).save(pdf_path, 'PDF', resolution=50.0,
+def jpg_to_pdf(file_path: PosixPath, tmp_dir: PosixPath) -> str:
+    pdf_name = f'{file_path.name}_compressed.pdf'
+    jpgs_dir = tmp_dir / 'jpg'
+
+    jpg_paths = [jpgs_dir / file for file in sorted(os.listdir(jpgs_dir))]
+    Image.open(jpg_paths[0]).save(pdf_name, 'PDF', resolution=50.0,
                                   save_all=True, append_images=(Image.open(file)
                                                                 for file in jpg_paths[1:]))
-    return pdf_path
+    return pdf_name
 
 
 def organize_pdf() -> None:
