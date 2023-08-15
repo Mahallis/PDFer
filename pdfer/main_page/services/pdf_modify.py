@@ -50,7 +50,7 @@ def merge_pdf(filenames: list) -> None:
         writer.write(fout)
 
 
-def compress_pdf(filename: str, path: PosixPath) -> None:
+def compress_pdf(filename: str, path: PosixPath) -> PosixPath:
     '''Reduces file size converting a pdf pages to 
     jpg images, reducing their quality and then merging into one pdf file'''
     '''TODO: make it work with django. Start from changing rules to work with files instead of filenames'''
@@ -61,9 +61,10 @@ def compress_pdf(filename: str, path: PosixPath) -> None:
     os.mkdir(tmp_dir / 'jpg')
 
     pdf_to_img_compress(filename, path, tmp_dir)
-    jpg_to_pdf(filename, path, tmp_dir)
+    comressed_path = jpg_to_pdf(filename, path, tmp_dir)
 
     rmtree(tmp_dir)
+    return comressed_path
 
 
 def pdf_to_img_compress(filename: str, path: PosixPath, tmp_dir: PosixPath) -> None:
@@ -85,13 +86,14 @@ def pdf_to_img_compress(filename: str, path: PosixPath, tmp_dir: PosixPath) -> N
                     image.save(jpg_fout, optimize=True, quality=60)
 
 
-def jpg_to_pdf(filename: str, path: PosixPath, tmp_dir: PosixPath) -> None:
+def jpg_to_pdf(filename: str, path: PosixPath, tmp_dir: PosixPath) -> PosixPath:
     pdf_path = path / f'{filename}_compressed.pdf'
     jpg_paths = [tmp_dir / 'jpg/' /
                  file for file in sorted(os.listdir(tmp_dir / 'jpg'))]
     Image.open(jpg_paths[0]).save(pdf_path, 'PDF', resolution=50.0,
                                   save_all=True, append_images=(Image.open(file)
                                                                 for file in jpg_paths[1:]))
+    return pdf_path
 
 
 def organize_pdf() -> None:

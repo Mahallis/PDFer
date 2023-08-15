@@ -12,8 +12,13 @@ def index(request) -> HttpResponse:
         if form.is_valid():
             files.save_file(request.FILES.get('file'),
                             settings.MEDIA_ROOT / 'pdfs/')
-            pdf.compress_pdf(request.FILES.get('file').name,
-                             settings.MEDIA_ROOT / 'pdfs/')
+            compressed_path = pdf.compress_pdf(request.FILES.get('file').name,
+                                               settings.MEDIA_ROOT / 'pdfs/')
+            with open(compressed_path, 'rb') as file:
+                return HttpResponse(file, headers={
+                    'Content-Type': 'application:pdf',
+                    'Content-Disposition': f'attachment; filename="{request.FILES.get("file").name}"'
+                })
     else:
         form = UploadFileForm()
     context = {'form': form,
