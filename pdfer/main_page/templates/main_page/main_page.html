@@ -1,12 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>{{ title }}</title>
   </head>
   <body>
-    <h1>I'm alive, {{ name }}</h1>
+    <h1>Сжатие докмуента</h1>
+    <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
     <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
       {% csrf_token %}
       {{ form.as_p }}
