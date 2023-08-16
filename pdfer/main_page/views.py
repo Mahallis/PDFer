@@ -1,27 +1,27 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
-from django.conf import settings
 
 from .forms import UploadFileForm
 from .services import compress_pdf, file_manage
 
 
-def index(request) -> HttpResponse:
+def index(request) -> FileResponse | HttpResponse:
     '''Add validation to a form (to check for a type)'''
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES.get('file')
-            file_path = file_manage.save_file(
-                file, settings.MEDIA_ROOT / 'pdfs/')
-            compressed_file_path = compress_pdf.compress_file(file_path)
-            file_manage.delete_file(file_path)
-            with open(compressed_file_path, 'rb') as compressed_file:
-                file_manage.delete_file(compressed_file_path)
-                return HttpResponse(compressed_file.read(), headers={
-                    'Content-Type': 'application:pdf',
-                    'Content-Disposition': f'attachment; filename="{request.FILES.get("file").name}"'
-                })
+            upload_file_path = file_manage.save_file(file)
+            compressed_file_path = compress_pdf.compress_file(upload_file_path)
+
+            file_response = FileResponse(
+                open(compressed_file_path, 'rb'),
+                as_attachment=True,
+                filename=compressed_file_path.name)
+
+            file_manage.delete_file(upload_file_path)
+            file_manage.delete_file(compressed_file_path)
+            return file_response
     else:
         form = UploadFileForm()
     context = {'form': form,
