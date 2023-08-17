@@ -1,4 +1,7 @@
 from shutil import rmtree
+from os import listdir
+from pathlib import Path
+import zipfile
 
 from django.http import HttpResponse, FileResponse
 from django.shortcuts import render
@@ -12,16 +15,21 @@ def index(request) -> FileResponse | HttpResponse:
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            file = request.FILES.get('file')
-            upload_file_path = file_manage.store_file(file)
-            compressed_file_path = compress_pdf.compress_file(
-                upload_file_path, form.cleaned_data)
-
+            files = form.cleaned_data['file_field']
+            upload_files_path = file_manage.store_files(files)
+            for file_path in listdir(upload_files_path / 'uploaded_files'):
+                compress_pdf.compress_file(
+                    upload_files_path / 'uploaded_files' / Path(file_path), form.cleaned_data)
+            archive_path = upload_files_path / 'compressed.zip'
+            with zipfile.ZipFile(archive_path, 'w') as archive:
+                for file in listdir(upload_files_path / 'compressed_files'):
+                    archive.write(
+                        upload_files_path / 'compressed_files' / file, arcname=file)
             file_response = FileResponse(
-                open(compressed_file_path, 'rb'),
+                open(archive_path, 'rb'),
                 as_attachment=True,
-                filename=compressed_file_path.name)
-            rmtree(upload_file_path.parent)
+                filename='compresssed.zip')
+            rmtree(upload_files_path)
             return file_response
     else:
         form = UploadFileForm()

@@ -1,5 +1,5 @@
 import os
-from pathlib import PosixPath
+from pathlib import Path
 import tempfile
 from PIL import Image
 
@@ -7,7 +7,7 @@ from PyPDF2 import PdfReader, PdfWriter
 from pdf2image.pdf2image import convert_from_path
 
 
-def compress_file(file_path: PosixPath, comp_params: dict) -> PosixPath:
+def compress_file(file_path: Path, comp_params: dict) -> Path:
     '''Reduces file size converting a pdf pages to 
     jpg images, reducing their quality and then merging into one pdf file'''
 
@@ -17,18 +17,18 @@ def compress_file(file_path: PosixPath, comp_params: dict) -> PosixPath:
     return comressed_name
 
 
-def pdf_to_img_compress(file_path: PosixPath, comp_params: dict) -> None:
+def pdf_to_img_compress(file_path: Path, comp_params: dict) -> None:
     '''TODO: use split_pdf function to split files'''
 
     pdf_file = PdfReader(file_path)
     for num, page in enumerate(pdf_file.pages):
-        temp_pdf_file = file_path.parent / f'pdf/{num}.pdf'
+        temp_pdf_file = file_path.parent.parent / f'pdf/{num}.pdf'
         with open(temp_pdf_file, 'wb') as fout:
             writer = PdfWriter()
             writer.add_page(page)
             writer.write(fout)
 
-        with open(file_path.parent / f'jpg/{num}.jpg', 'wb') as jpg_fout:
+        with open(file_path.parent.parent / f'jpg/{num}.jpg', 'wb') as jpg_fout:
             with tempfile.TemporaryDirectory() as tmp_path:
                 page_image = convert_from_path(
                     temp_pdf_file,
@@ -43,9 +43,10 @@ def pdf_to_img_compress(file_path: PosixPath, comp_params: dict) -> None:
                         quality=comp_params['quality'])
 
 
-def jpg_to_pdf(file_path: PosixPath, comp_params: dict) -> PosixPath:
-    pdf_path = file_path.parent / f'{file_path.stem}_compressed.pdf'
-    jpgs_dir = file_path.parent / 'jpg'
+def jpg_to_pdf(file_path: Path, comp_params: dict) -> Path:
+    pdf_path = file_path.parent.parent / 'compressed_files' / \
+        f'{file_path.stem}_compressed.pdf'
+    jpgs_dir = file_path.parent.parent / 'jpg'
 
     jpg_paths = [jpgs_dir / file for file in sorted(os.listdir(jpgs_dir))]
     Image.open(jpg_paths[0]).save(pdf_path, 'PDF', resolution=comp_params['resolution'],
