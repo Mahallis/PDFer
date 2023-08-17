@@ -1,10 +1,11 @@
-from os import mkdir
+from os import mkdir, listdir
 from pathlib import Path
+from zipfile import ZipFile
 from datetime import datetime
 from django.conf import settings
 
 
-def store_files(files: dict) -> Path:
+def tmp_storage_init() -> Path:
     '''Saves the given file, creates directories and returns PosixPath'''
 
     tmp_dir_path = settings.MEDIA_ROOT / 'pdfs' / \
@@ -16,9 +17,16 @@ def store_files(files: dict) -> Path:
     mkdir(tmp_dir_path / 'pdf')
     mkdir(tmp_dir_path / 'jpg')
 
-    for file in files:
-        upload_file_path = tmp_dir_path / 'uploaded_files' / file.name
-        with open(upload_file_path, 'wb+') as f:
-            for chunk in file.chunks():
-                f.write(chunk)
     return tmp_dir_path
+
+
+def generate_result_file(files_cnt: int, result_files: Path):
+    compressed_files = listdir(result_files)
+    if files_cnt > 1:
+        result_file_path = result_files.parent / 'compressed.zip'
+        with ZipFile(result_file_path, 'w') as archive:
+            for file in compressed_files:
+                archive.write(result_files / file, arcname=file)
+    else:
+        result_file_path = result_files / compressed_files[0]
+    return result_file_path
