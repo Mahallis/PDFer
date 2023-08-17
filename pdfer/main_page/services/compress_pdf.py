@@ -44,11 +44,10 @@ def pdf_to_img_compress(file_path: Path, form: dict) -> None:
                     dpi=form['dpi'],
                     grayscale=form['is_grayscale'],
                     paths_only=True)
-                for image in page_image:
-                    image.save(
-                        jpg_fout,
-                        optimize=True,
-                        quality=form['quality'])
+                page_image[0].save(
+                    jpg_fout,
+                    optimize=True,
+                    quality=form['quality'])
 
 
 def jpg_to_pdf(file_path: Path, form: dict) -> None:
