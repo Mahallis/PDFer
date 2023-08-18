@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import FileExtensionValidator
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -20,12 +21,13 @@ class MultipleFileField(forms.FileField):
 
 
 class UploadFileForm(forms.Form):
-    file_field = MultipleFileField(label="Поле для загрузки файла")
-    is_grayscale = forms.BooleanField(
-        label='Черно-белый документ', required=False)
+    file_field = MultipleFileField(label="Поле для загрузки файла",
+                                   validators=[FileExtensionValidator(['pdf'], 'Выберите файл с расширением .pdf')])
+    is_grayscale = forms.BooleanField(label='Черно-белый документ',
+                                      required=False)
     dpi = forms.IntegerField(label='Точек на дюйм',
                              min_value=100, max_value=300, step_size=50)
-    quality = forms.IntegerField(
-        label='Качество', min_value=10, max_value=100, step_size=10)
-    resolution = forms.FloatField(
-        label='Разрешение', min_value=10.0, max_value=100.0, step_size=10.0)
+    quality = forms.IntegerField(label='Качество',
+                                 min_value=10,
+                                 max_value=100,
+                                 step_size=10)

@@ -16,9 +16,7 @@ def index(request) -> FileResponse | HttpResponse:
             form = form.cleaned_data
             tmp_storage = tmp_storage_init()
             compressed_files = compress_pdf(form, tmp_storage)
-
-            result_file_path = generate_result_file(
-                len(form['file_field']), compressed_files)
+            result_file_path = generate_result_file(compressed_files)
             file_response = FileResponse(
                 open(result_file_path, 'rb'),
                 as_attachment=True,

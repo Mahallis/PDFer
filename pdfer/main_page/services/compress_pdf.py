@@ -17,7 +17,7 @@ def compress_pdf(form: dict, tmp_storage: Path) -> Path:
             for chunk in file.chunks():
                 f.write(chunk)
         pdf_to_img_compress(upload_file_path, form)
-        jpg_to_pdf(upload_file_path, form)
+        jpg_to_pdf(upload_file_path)
 
     return tmp_storage / 'compressed_files'
 
@@ -50,12 +50,12 @@ def pdf_to_img_compress(file_path: Path, form: dict) -> None:
                     quality=form['quality'])
 
 
-def jpg_to_pdf(file_path: Path, form: dict) -> None:
+def jpg_to_pdf(file_path: Path) -> None:
     pdf_name = f'{file_path.stem}_compressed.pdf'
     pdf_path = file_path.parent.parent / 'compressed_files' / pdf_name
     jpgs_dir = file_path.parent.parent / 'jpg'
 
     jpg_paths = [jpgs_dir / file for file in sorted(os.listdir(jpgs_dir))]
-    Image.open(jpg_paths[0]).save(pdf_path, 'PDF', resolution=form['resolution'],
+    Image.open(jpg_paths[0]).save(pdf_path, 'PDF', resolution=100,
                                   save_all=True, append_images=(Image.open(file)
                                                                 for file in jpg_paths[1:]))
