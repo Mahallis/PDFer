@@ -8,11 +8,11 @@
   <body>
     <h1>Сжатие докмуента</h1>
     <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
-    <form method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column;">
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Submit" / >
+      <p><a href="{% url 'main_page' %}">To main</a></p>
     </form>
-    <a href="{% url 'names' 'Janos' %}">Name</a>
   </body>
 </html>

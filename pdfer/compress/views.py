@@ -8,7 +8,7 @@ from .services.compress_pdf import compress_pdf
 from .services.file_manage import tmp_storage_init, generate_result_file
 
 
-def index(request) -> FileResponse | HttpResponse:
+def compress(request) -> FileResponse | HttpResponse:
     '''Add validation to a form (to check for a type)'''
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -27,7 +27,7 @@ def index(request) -> FileResponse | HttpResponse:
         form = UploadFileForm()
     context = {'form': form,
                'title': 'Сжатие документа'}
-    return render(request, 'main_page/main_page.html', context)
+    return render(request, 'compress/compress.html', context)
 
 
 def names(request, name) -> HttpResponse:
