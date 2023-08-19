@@ -3,12 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Main page</title>
+    <title>Split page</title>
   </head>
   <body>
-    <h1>Main page</h1>
-    {% for page in pages %}
-    <p><a href="{% url page %}">{{page}}</a></p>
-    {% endfor %}
+    <h1>Split page</h1>
+    <p><a href="{% url 'main_page' %}">To main</a></p>
   </body>
 </html>

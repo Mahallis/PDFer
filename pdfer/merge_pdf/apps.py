@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CompressConfig(AppConfig):
+class MergePdfConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'compress'
+    name = 'merge_pdf'

@@ -27,9 +27,4 @@ def compress(request) -> FileResponse | HttpResponse:
         form = UploadFileForm()
     context = {'form': form,
                'title': 'Сжатие документа'}
-    return render(request, 'compress/compress.html', context)
-
-
-def names(request, name) -> HttpResponse:
-    context = {'name': name}
-    return render(request, 'main_page/main_page.html', context)
+    return render(request, 'compress_pdf/compress_pdf.html', context)

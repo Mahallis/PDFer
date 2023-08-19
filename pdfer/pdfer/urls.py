@@ -16,11 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from compress.views import compress
+from compress_pdf.views import compress
+from merge_pdf.views import merge_pdf
+from split_pdf.views import split_pdf
 from manage_files.views import main_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main_page, name='main_page'),
-    path('compress_pdf/', compress, name='compress_pdf')
+    path('compress_pdf/', compress, name='compress_pdf'),
+    path('merge_pdf/', merge_pdf, name='merge_pdf'),
+    path('split_pdf/', split_pdf, name='split_pdf'),
 ]
