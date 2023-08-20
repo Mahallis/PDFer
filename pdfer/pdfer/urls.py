@@ -15,15 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from compress_pdf.views import compress
 from merge_pdf.views import merge_pdf
 from split_pdf.views import split_pdf
-from manage_files.views import main_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', main_page, name='main_page'),
+    path('', include('manage_files.urls')),
     path('compress_pdf/', compress, name='compress_pdf'),
     path('merge_pdf/', merge_pdf, name='merge_pdf'),
     path('split_pdf/', split_pdf, name='split_pdf'),
