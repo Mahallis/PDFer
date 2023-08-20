@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from .forms import UploadFileForm
 from .services.compress_pdf import compress_pdf
-from .services.file_manage import tmp_storage_init, generate_result_file
+from manage_files.services.manage_files import tmp_storage_init, generate_result_file
 
 
 def compress(request) -> FileResponse | HttpResponse:
