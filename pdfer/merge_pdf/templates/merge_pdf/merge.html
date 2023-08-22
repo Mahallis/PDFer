@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=, initial-scale=1.0" />
-    <title>Merge pdf</title>
+    <title>{{ title }}</title>
   </head>
   <body>
-    <h1>Merge page</h1>
-    <p><a href="{% url 'main_page' %}">To main</a></p>
+    <h1>{{ title }}</h1>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Принять" / >
+    <p><a href="{% url 'main_page' %}">Назад</a></p>
   </body>
 </html>

@@ -10,8 +10,8 @@ def compress(request) -> FileResponse | HttpResponse:
     if request.method == 'POST':
         form = CompressForm(request.POST, request.FILES)
         if form.is_valid():
-            compressed_file_path = compress_pdf(form.cleaned_data)
-            return compressed_file_path
+            compressed_file_response = compress_pdf(form.cleaned_data)
+            return compressed_file_response
     else:
         form = CompressForm()
     context = {'form': form,

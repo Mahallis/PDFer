@@ -1,9 +1,10 @@
-from PyPDF2 import PdfReader, PdfWriter
+from PyPDF2 import PdfWriter, PdfReader
 
 
-def merge_pdf(filenames: list) -> None:
+def merge_pdf_service(filenames: list) -> None:
     '''Merges given files'''
-    '''TODO: figure out how to merge several files. Maybe it is possible by handling files as list of pages'''
+    '''TODO: make it work with django. Min 2 files'''
+
     with open('Merged_files.pdf', 'wb') as fout:
         writer = PdfWriter()
         for filename in filenames:
