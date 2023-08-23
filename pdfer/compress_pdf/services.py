@@ -3,7 +3,6 @@ from tempfile import TemporaryDirectory
 
 from django.core.files.base import File
 from django.http import FileResponse
-from django.conf import settings
 
 from pdf2image.pdf2image import convert_from_bytes
 from manage_files.services import generate_result_file
@@ -13,7 +12,7 @@ def compress_pdf(form: dict) -> FileResponse:
     '''Reduces file size converting a pdf pages to 
     jpg images, reducing their quality and then merging into one pdf file'''
 
-    with TemporaryDirectory(dir=settings.MEDIA_ROOT) as tmp_dir:
+    with TemporaryDirectory(dir='media/') as tmp_dir:
         for file in form['file_field']:
             pdf_to_img_compress(Path(tmp_dir), form, file)
 

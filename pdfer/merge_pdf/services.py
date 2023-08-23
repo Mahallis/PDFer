@@ -1,13 +1,24 @@
+from pathlib import Path
 from PyPDF2 import PdfWriter, PdfReader
+from tempfile import TemporaryDirectory
+
+from django.http import FileResponse
 
 
-def merge_pdf_service(filenames: list) -> None:
+def merge_pdf_service(files: dict) -> FileResponse:
     '''Merges given files'''
-    '''TODO: make it work with django. Min 2 files'''
 
-    with open('Merged_files.pdf', 'wb') as fout:
+    with TemporaryDirectory(dir='media/') as tmp_dir:
+        result_path = Path(tmp_dir, 'merged_file.pdf')
         writer = PdfWriter()
-        for filename in filenames:
-            file = PdfReader(filename)
-            writer.append(file)
-        writer.write(fout)
+        with open(result_path, 'wb') as fout:
+            for file in files['file_field']:
+                pdf_file = PdfReader(file)
+                writer.append(pdf_file)
+            writer.write(fout)
+
+        file_response = FileResponse(
+            open(result_path, 'rb'),
+            as_attachment=True,
+            filename=result_path.name)
+        return file_response
