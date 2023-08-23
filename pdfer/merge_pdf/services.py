@@ -5,14 +5,15 @@ from tempfile import TemporaryDirectory
 from django.http import FileResponse
 
 
-def merge_pdf_service(files: dict) -> FileResponse:
+def merge_pdf_service(form: dict) -> FileResponse:
     '''Merges given files'''
 
     with TemporaryDirectory(dir='media/') as tmp_dir:
         result_path = Path(tmp_dir, 'merged_file.pdf')
         writer = PdfWriter()
+        files = form['file_field']
         with open(result_path, 'wb') as fout:
-            for file in files['file_field']:
+            for file in files:
                 pdf_file = PdfReader(file)
                 writer.append(pdf_file)
             writer.write(fout)
