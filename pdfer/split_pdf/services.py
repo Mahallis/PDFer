@@ -1,6 +1,7 @@
 from pathlib import Path
 from PyPDF2 import PdfReader, PdfWriter
 from tempfile import TemporaryDirectory
+from re import match, split
 
 from django.http import FileResponse
 from manage_files.services import generate_result_file
@@ -14,13 +15,14 @@ def split_pdf_service(form: dict) -> FileResponse:
         file = form['file_field'][0]
         file_path = Path(tmp_dir, file.name)
         reader = PdfReader(file)
-        pages = parse_pages(form['intervals'], len(reader.pages))
+        intervals = prep_pages(form['intervals'], len(reader.pages))
 
-        for num, page in enumerate(pages):
+        for num, interval in enumerate(intervals):
             writer = PdfWriter()
             with open(file_path.parent / f'{file_path.stem}_{str(num)}.pdf', 'wb') as fout:
-                writer.add_page(reader.pages[page])
-                writer.write(fout)
+                for page in interval:
+                    writer.add_page(reader.pages[page])
+                    writer.write(fout)
         splitted_file_path = generate_result_file(Path(tmp_dir), 'splitted')
 
         file_response = FileResponse(
@@ -30,7 +32,17 @@ def split_pdf_service(form: dict) -> FileResponse:
         return file_response
 
 
-def parse_pages(intervals: str, pages: int) -> list:
-    result = [int(item.strip()) - 1 for item in intervals.split(',')
-              if 0 < int(item.strip()) < pages]
-    return result
+def prep_pages(intervals: str, pages: int) -> list:
+    '''Prepares intervals for processing'''
+    '''TODO: check in frontside for staying in ranges'''
+
+    prepared = []
+    for interval in split(r'[, ]', intervals):
+        interval = interval.strip()
+        if len(interval) == 1:
+            if 0 < (interval := int(interval) - 1) < pages:
+                prepared.append([interval])
+        elif match(r'^\d+-\d+$', interval):
+            min, max = [int(num) for num in interval.split('-')]
+            prepared.append(range(min-1, max))
+    return prepared
