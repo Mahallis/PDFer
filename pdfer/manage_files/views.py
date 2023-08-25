@@ -6,4 +6,4 @@ def main_page(request):
         'title': 'PDFer проект',
         'pages': ['compress_pdf', 'merge_pdf', 'split_pdf']
     }
-    return render(request, 'manage_files/index.html', context=context)
+    return render(request, 'manage_files/apps.html', context=context)

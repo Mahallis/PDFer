@@ -1,0 +1,9 @@
+{% extends "manage_files/index.html" %}
+{% block content %}
+    <h1>{{ title }}</h1>
+    {% for page in pages %}
+        <p>
+            <a href="{% url page %}">{{ page }}</a>
+        </p>
+    {% endfor %}
+{% endblock content %}

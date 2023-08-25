@@ -1,18 +1,13 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ title }}</title>
-  </head>
-  <body>
+{% extends "manage_files/index.html" %}
+{% block content %}
     <h1>Сжатие докмуента</h1>
     <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
     <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="Принять" / >
-      <p><a href="{% url 'main_page' %}">Назад</a></p>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Принять" />
+        <p>
+            <a href="{% url 'main_page' %}">Назад</a>
+        </p>
     </form>
-  </body>
-</html>
+{% endblock %}
