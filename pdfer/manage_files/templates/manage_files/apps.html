@@ -1,15 +1,24 @@
 {% extends "manage_files/index.html" %}
 {% load static %}
 {% block content %}
-    {% for title, name, image in pages %}
-        <a href="{% url name %}" class="card text-center col-sm-6 p-4">
-            <img src="{% static image %}"
-                 height="237px"
-                 class="card-img-top "
-                 alt="{{ title }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ title }} документ</h5>
+    <div class="row row-cols-1 row-cols-md-2 g-3 justify-content-center"
+         style="min-height: 80%">
+        {% for title, name, image, description in pages %}
+            <div class="col-lg-5">
+                <div class="card h-100">
+                    <img src="{% static image %}"
+                         class="card-img-top mt-4"
+                         alt="{{ title }}"
+                         style="max-height: 200px">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ title }} документ</h5>
+                        <p class="card-text">{{ description }}</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{% url name %}" class="btn btn-primary">Начать</a>
+                    </div>
+                </div>
             </div>
-        </a>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% endblock content %}

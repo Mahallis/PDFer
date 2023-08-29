@@ -1,13 +1,14 @@
 {% extends "manage_files/index.html" %}
 {% block content %}
-    <h1>Сжатие докмуента</h1>
-    <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Принять" />
-        <p>
-            <a href="{% url 'main_page' %}">Назад</a>
-        </p>
-    </form>
+    <div class="row" style="min-height: 80%">
+        <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_div }}
+            <input type="submit" value="Принять" />
+            <p>
+                <a href="{% url 'main_page' %}">Назад</a>
+            </p>
+        </form>
+    </div>
 {% endblock %}

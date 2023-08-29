@@ -9,22 +9,28 @@
       integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
       crossorigin="anonymous"
     />
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <div class="container-fluid vh-100">
+      <div
+        class="row text-bg-primary align-items-center"
+        style="min-height: 10%"
+      >
+        <h1 class="text-center">{{ title }}</h1>
+      </div>
+      {% block content %} {% endblock content %}
+      <div
+        class="row text-bg-primary text-center align-items-center"
+        style="min-height: 10%"
+      >
+        <h6>Mahallis 2023</h6>
+      </div>
+    </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
       crossorigin="anonymous"
     ></script>
-    <title>{{ title }}</title>
-  </head>
-  <body>
-    <div class="container vh-60">
-      <div class="row h-auto text-bg-primary p-3">
-        <h1 class="text-center">{{ title }}</h1>
-      </div>
-      <div class="row">{% block content %} {% endblock content %}</div>
-      <div class="row h-auto text-bg-primary p-3 text-center">
-        <h6>Mahallis 2023</h6>
-      </div>
-    </div>
   </body>
 </html>

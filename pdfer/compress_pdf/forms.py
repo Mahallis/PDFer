@@ -4,7 +4,10 @@ from manage_files.forms import UploadFileForm
 
 class CompressForm(UploadFileForm, forms.Form):
     is_grayscale = forms.BooleanField(label='Черно-белый документ',
-                                      required=False)
+                                      required=False,
+                                      widget=forms.CheckboxInput(attrs={
+                                      'class': 'form-check-input'
+                                      }))
     dpi = forms.IntegerField(label='Точек на дюйм',
                              min_value=100, max_value=150, step_size=50, initial=100)
     quality = forms.IntegerField(label='Качество',
