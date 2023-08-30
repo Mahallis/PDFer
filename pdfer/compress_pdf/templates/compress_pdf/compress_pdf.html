@@ -1,15 +1,22 @@
 {% extends "manage_files/index.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="row" style="min-height: 80%">
-        <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form | crispy }}
-            <input type="submit" value="Принять" />
-            <p>
-                <a href="{% url 'main_page' %}">Назад</a>
-            </p>
-        </form>
+    <div class="row container-fluid align-items-center justify-content-center"
+         style="min-height: 80%">
+        <div class="col-lg-5">
+            <div class="row">
+                <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <div class="d-grid gap-2">
+                        <input type="submit" class="btn btn-primary" value="Принять" />
+                        <a href="{% url 'main_page' %}"
+                           class="btn btn-outline-secondary"
+                           role="button">Назад</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
