@@ -1,30 +1,37 @@
 let upload = document.getElementById("id_file_field");
-upload.oninput = function() {
+
+if (document.querySelector("#canvas-container")) {
+  upload.addEventListener("input", async () => {
+    drawPage();
+  });
+}
+
+async function drawPage() {
   const url = URL.createObjectURL(upload.files[0]);
   const loadingTask = pdfjsLib.getDocument(url);
   const container = document.querySelector("#canvas-container");
   container.innerHTML = "";
+  const pdf = await loadingTask.promise;
 
-  async function drawPage(loadingTask) {
-    const pdf = await loadingTask.promise;
-    for (let num = 1; num <= pdf.numPages; num++) {
-      const page = await pdf.getPage(num);
-      createCanvas(num, container);
-      renderPage(num, page);
-    }
+  for (let num = 1; num <= pdf.numPages; num++) {
+    const page = await pdf.getPage(num);
+    createCanvas(num, container);
+    renderPage(num, page);
   }
-
-  drawPage(loadingTask);
-};
-
-function createCanvas(num, container) {
-  const canvas = document.createElement("canvas");
-  canvas.id = "canvas" + num;
-  canvas.style = "border: solid 1px black;";
-  container.append(canvas);
 }
 
-function renderPage(num, page) {
+async function createCanvas(num, container) {
+  const canvas = document.createElement("canvas");
+  const canvasDiv = document.createElement("div");
+  canvas.id = "canvas" + num;
+  canvas.style = "border: solid 1px black; margin: 5px";
+  canvasDiv.style =
+    "border: solid 1px black; display: flex; align-items: center; justify-content: center;";
+  canvasDiv.append(canvas);
+  container.append(canvasDiv);
+}
+
+async function renderPage(num, page) {
   const scale = 0.2;
   const viewport = page.getViewport({ scale });
   const outputScale = window.devicePixelRatio || 1;
@@ -45,5 +52,5 @@ function renderPage(num, page) {
     transform,
     viewport,
   };
-  page.render(renderContext);
+  await page.render(renderContext);
 }
