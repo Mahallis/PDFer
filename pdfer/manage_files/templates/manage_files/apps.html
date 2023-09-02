@@ -1,11 +1,11 @@
 {% extends "manage_files/index.html" %}
 {% load static %}
 {% block content %}
-    <div class="row row-cols-1 row-cols-md-2 g-3 justify-content-center"
+    <div class="row container-fluid row-cols-md-2 g-3 align-items-center justify-content-center"
          style="min-height: 80%">
         {% for title, name, image, description in pages %}
             <div class="col-lg-5">
-                <div class="card h-100">
+                <div class="card h-50">
                     <img src="{% static image %}"
                          class="card-img-top mt-4"
                          alt="{{ title }}"
