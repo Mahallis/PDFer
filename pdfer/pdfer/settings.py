@@ -43,7 +43,6 @@ INSTALLED_APPS = [
 
     'manage_files',
     'compress_pdf',
-    'merge_pdf',
 ]
 
 MIDDLEWARE = [
