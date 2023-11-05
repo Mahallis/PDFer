@@ -23,7 +23,7 @@ class MultipleFileField(forms.FileField):
 class CompressForm(forms.Form):
     file_field = MultipleFileField(label="Поле для загрузки файла",
                                    validators=[FileExtensionValidator(['pdf'], 'Выберите файл с расширением .pdf')])
-    is_grayscale = forms.BooleanField(label='Черно-белый документ',
+    is_grayscale = forms.BooleanField(label='Сделать документ черно-белым',
                                       required=False)
     dpi = forms.IntegerField(label='Точек на дюйм',
                              min_value=100, max_value=150, step_size=50, initial=100)

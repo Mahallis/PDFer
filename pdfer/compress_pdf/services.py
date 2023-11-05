@@ -28,7 +28,6 @@ def compress_pdf(form: dict) -> FileResponse:
 def pdf_to_img_compress(file_path: Path, form: dict, file: File) -> None:
     '''Converts pdf to jpg, compresses it and converts it back'''
 
-    # Did this to remove file extension
     pdf_path = file_path / f'{file.name[0:-4]}_compressed.pdf'
     page_image = convert_from_bytes(file.read(),
                                     dpi=form['dpi'],
