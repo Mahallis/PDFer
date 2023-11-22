@@ -3,10 +3,14 @@ from django.core.validators import FileExtensionValidator
 
 
 class MultipleFileInput(forms.ClearableFileInput):
+    '''Allows to select multiple files in form'''
+
     allow_multiple_selected = True
 
 
 class MultipleFileField(forms.FileField):
+    '''Adds the ability to handle multiple uploaded file'''
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
@@ -14,6 +18,7 @@ class MultipleFileField(forms.FileField):
     def clean(self, data, initial=None):
         single_file_clean = super().clean
         if isinstance(data, (list, tuple)):
+            # Validates every uploaded file
             result = [single_file_clean(d, initial) for d in data]
         else:
             result = single_file_clean(data, initial)
