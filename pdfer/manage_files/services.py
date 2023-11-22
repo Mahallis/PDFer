@@ -3,6 +3,9 @@ from zipfile import ZipFile
 
 
 def generate_result_file(result_path: Path, name: str) -> Path:
+    '''Return a path to a compressed file if single file was 
+    uploaded or to an archive if multiple'''
+
     compressed_files = [file for file in result_path.glob('*.pdf')]
     if len(compressed_files) > 1:
         result_file_path = result_path / f'{name}.zip'

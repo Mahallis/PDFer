@@ -1,8 +1,6 @@
 from tempfile import TemporaryDirectory
 from http import HTTPStatus
 from django.test import TestCase, Client
-from django.core.files import File
-from .forms import CompressForm, MultipleFileField
 
 
 class TestCompress(TestCase):

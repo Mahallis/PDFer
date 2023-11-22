@@ -6,11 +6,12 @@ from .services import compress_pdf
 
 
 def compress(request) -> FileResponse | HttpResponse:
-    '''Add validation to a form (to check for a type)'''
+    '''Shows the form and sendf the POSTed data to a compress service'''
     if request.method == 'POST':
         form = CompressForm(request.POST, request.FILES)
         if form.is_valid():
-            compressed_file_response = compress_pdf(form.cleaned_data)
+            compressed_file_response = compress_pdf(
+                form.cleaned_data)  # TODO: check mem usage
             return compressed_file_response
     else:
         form = CompressForm()
