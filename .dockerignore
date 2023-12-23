@@ -1,0 +1,16 @@
+venv/
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+.pdf
+
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+.vscode/
