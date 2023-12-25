@@ -12,7 +12,7 @@ def compress_pdf(form: dict) -> FileResponse:
     '''Reduces file size converting a pdf pages to 
     jpg images, reducing their quality and then merging into one pdf file'''
 
-    with TemporaryDirectory(dir='media/') as tmp_dir:
+    with TemporaryDirectory(dir='/media/') as tmp_dir:
         for file in form['file_field']:
             pdf_to_img_compress(Path(tmp_dir), form, file)
 

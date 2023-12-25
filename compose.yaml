@@ -7,6 +7,8 @@ services:
       - media_volume:/usr/src/app/media
     expose:
       - 8000
+    networks:
+      - nginx-network
   nginx:
     build: ./nginx
     volumes:
@@ -16,7 +18,13 @@ services:
       - 80:80
     depends_on:
       - web
+    networks:
+      - nginx-network
 
 volumes:
   static_volume:
   media_volume:
+
+networks:
+  nginx-network:
+    driver: bridge
