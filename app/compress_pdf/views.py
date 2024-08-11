@@ -1,4 +1,7 @@
+from tempfile import TemporaryDirectory
+
 from django.http import HttpResponse, FileResponse
+from django.conf import settings
 from django.shortcuts import render
 
 from .forms import CompressForm
@@ -10,10 +13,16 @@ def compress(request) -> FileResponse | HttpResponse:
     if request.method == 'POST':
         form = CompressForm(request.POST, request.FILES)
         if form.is_valid():
-            compressed_file_response = compress_pdf(
-                form.cleaned_data
-            )
-            return compressed_file_response
+            with TemporaryDirectory(dir=settings.MEDIA_ROOT) as tmp_dir:
+                compressed_file_path = compress_pdf(
+                    form.cleaned_data,
+                    tmp_dir
+                )
+                return FileResponse(
+                    open(compressed_file_path, 'rb'),
+                    as_attachment=True,
+                    filename=compressed_file_path.name
+                )
     else:
         form = CompressForm()
     context = {'form': form,

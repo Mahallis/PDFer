@@ -1,27 +1,20 @@
 from zipfile import ZipFile
 from pathlib import Path
-from tempfile import TemporaryDirectory
 
 from django.core.files.base import File
-from django.http import FileResponse
 from pdf2image.pdf2image import convert_from_bytes
 
 
-def compress_pdf(form: dict) -> FileResponse:
+def compress_pdf(form: dict, tmp_dir: str) -> Path:
     '''Reduces file size converting a pdf pages to
     jpg images, reducing their quality and then merging into one pdf file'''
 
-    with TemporaryDirectory(dir='/media/') as tmp_dir:
-        for file in form['file_field']:
-            pdf_to_img_compress(Path(tmp_dir), form, file)
-
-        compressed_file_path = generate_result_file(
-            Path(tmp_dir), 'compressed')
-        file_response = FileResponse(
-            open(compressed_file_path, 'rb'),
-            as_attachment=True,
-            filename=compressed_file_path.name)
-        return file_response
+    for file in form['file_field']:
+        pdf_to_img_compress(Path(tmp_dir), form, file)
+    return generate_result_file(
+        Path(tmp_dir),
+        'compressed'
+    )
 
 
 def pdf_to_img_compress(file_path: Path, form: dict, file: File) -> None:
