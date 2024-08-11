@@ -11,7 +11,8 @@ def compress(request) -> FileResponse | HttpResponse:
         form = CompressForm(request.POST, request.FILES)
         if form.is_valid():
             compressed_file_response = compress_pdf(
-                form.cleaned_data)  # TODO: check mem usage
+                form.cleaned_data
+            )
             return compressed_file_response
     else:
         form = CompressForm()
