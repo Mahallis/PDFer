@@ -2,18 +2,24 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="row container-fluid align-items-center justify-content-center"
-         style="min-height: 80%">
+         style="min-height: 80%;">
         <div class="col-lg-5">
             <div class="row">
-                <h4>Чем ниже значения, тем ниже качество и размер файла.</h4>
-                <form method="post" enctype="multipart/form-data">
+                <h4>Чем ниже значения, тем ниже качество и меньше размер файла.</h4>
+                <form method="post" enctype="multipart/form-data" id="fileForm">
                     {% csrf_token %}
                     {{ form | crispy }}
                     <div class="d-grid gap-2">
-                        <input type="submit" class="btn btn-primary" value="Принять" />
+                        <input type="submit" class="btn btn-primary" value="Принять"/>
                     </div>
                 </form>
             </div>
+        </div>
+        <div id="circlePlace">
+            <div style="width: 3rem; height: 3rem;" class="spinner-border text-light" role="status" id="progressCircle">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5 id="circleText" style="color: white; font-weight: bold;"></h5>
         </div>
     </div>
 {% endblock %}

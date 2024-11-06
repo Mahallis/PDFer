@@ -1,0 +1,15 @@
+#circlePlace{
+    border-radius: 5%;
+    height: 250px;
+    width: 400px;
+    background-color: #0d6dfdba;
+    position: absolute;
+    display: none;
+    margin: 20px 0px;
+    top: 50% -30px;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    padding: 55px 0px;
+    text-align: center;
+}
